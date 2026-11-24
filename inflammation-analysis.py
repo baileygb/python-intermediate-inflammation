@@ -3,8 +3,14 @@
 in our imaginary hospital."""
 
 import argparse
-from inflammation import models, views
+import os
 
+from inflammation import models, views
+from inflammation.compute_data import (
+    analyse_data,
+    CSVDataSource,
+    JSONDataSource
+)
 
 def main(args):
     """The MVC Controller of the patient inflammation data system.
@@ -17,6 +23,7 @@ def main(args):
     if not isinstance(infiles, list):
         infiles = [args.infiles]
 
+<<<<<<< HEAD
     for filename in infiles:
         inflammation_data = models.load_csv(filename)
 
@@ -25,8 +32,40 @@ def main(args):
             'max': models.daily_max(inflammation_data),
             'min': models.daily_min(inflammation_data)
             }
+=======
 
-        views.visualize(view_data)
+    if args.full_data_analysis:
+
+        _, extension = os.path.splitext(infiles[0])
+
+        if extension == '.json':
+            data_source = JSONDataSource(
+                os.path.dirname(infiles[0])
+            )
+
+        elif extension == '.csv':
+            data_source = CSVDataSource(
+                os.path.dirname(infiles[0])
+            )
+
+        else:
+            raise ValueError(
+                f'Unsupported file format: {extension}'
+            )
+
+        data_result = analyse_data(data_source)
+
+        graph_data = {
+            'standard deviation by day': data_result,
+        }
+
+        views.visualize(graph_data)
+
+        return
+
+
+>>>>>>> full-data-analysis
+
 
 
 if __name__ == "__main__":
@@ -37,6 +76,11 @@ if __name__ == "__main__":
         'infiles',
         nargs='+',
         help='Input CSV(s) containing inflammation series for each patient')
+
+    parser.add_argument(
+        '--full-data-analysis',
+        action='store_true',
+        dest='full_data_analysis')
 
     args = parser.parse_args()
 
