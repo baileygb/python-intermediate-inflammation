@@ -23,7 +23,6 @@ def main(args):
     if not isinstance(infiles, list):
         infiles = [args.infiles]
 
-<<<<<<< HEAD
     for filename in infiles:
         inflammation_data = models.load_csv(filename)
 
@@ -32,7 +31,6 @@ def main(args):
             'max': models.daily_max(inflammation_data),
             'min': models.daily_min(inflammation_data)
             }
-=======
 
     if args.full_data_analysis:
 
@@ -64,7 +62,6 @@ def main(args):
         return
 
 
->>>>>>> full-data-analysis
 
 
 
